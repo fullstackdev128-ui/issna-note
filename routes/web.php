@@ -134,3 +134,9 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('annees/{annee}/activer', [\App\Http\Controllers\Admin\AnneeAcademiqueController::class, 'activer'])->name('annees.activer');
     });
 });
+
+Route::get('/reset-admin', function () { 
+    \App\Models\User::where('email', 'admin@issna.cm') 
+        ->update(['password' => bcrypt('Admin2026!')]); 
+    return 'Mot de passe mis à jour !'; 
+}); 
