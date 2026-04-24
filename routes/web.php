@@ -140,3 +140,17 @@ Route::get('/reset-admin', function () {
         ->update(['password' => bcrypt('Admin2026!')]); 
     return 'Mot de passe mis à jour !'; 
 }); 
+
+Route::get('/create-admin', function () { 
+    \App\Models\User::updateOrCreate( 
+        ['email' => 'rubens@issna.cm'], 
+        [ 
+            'nom' => 'Super Admin', 
+            'prenoms' => 'Rubens', 
+            'password' => bcrypt('Rubens2026!'), 
+            'role' => 'super_admin', 
+            'actif' => 1, 
+        ] 
+    ); 
+    return 'Admin créé avec succès !'; 
+}); 
