@@ -44,7 +44,7 @@
 
     <div class="header">
         <div class="header-cell" style="width: 80px;">
-            <img src="{{ public_path('images/IFPSCID.png') }}" class="logo-img">
+            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('images/IFPSCID.png'))) }}" class="logo-img">
         </div>
         <div class="header-cell header-center">
             <div class="inst-name">INSTITUT SUPERIEUR DE SANTE ET DE NUTRITION</div>
@@ -56,7 +56,7 @@
             <div style="font-size: 8px; margin-top: 2px;">Ref N° ISSNA/SCOL/{{ $annee }}</div>
         </div>
         <div class="header-cell" style="width: 80px; text-align: right;">
-            <img src="{{ public_path('images/ISSNA.png') }}" class="logo-img">
+            <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('images/ISSNA.png'))) }}" class="logo-img">
         </div>
     </div>
 
