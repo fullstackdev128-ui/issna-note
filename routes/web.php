@@ -154,3 +154,15 @@ Route::get('/create-admin', function () {
     ); 
     return 'Admin créé avec succès !'; 
 }); 
+
+Route::get('/create-campuses', function () { 
+    \App\Models\Campus::firstOrCreate(
+        ['nom' => 'Campus A'],
+        ['ville' => 'Yaoundé']
+    ); 
+    \App\Models\Campus::firstOrCreate(
+        ['nom' => 'Campus B'],
+        ['ville' => 'Yaoundé']
+    ); 
+    return 'Campus A et Campus B créés avec succès !'; 
+});
