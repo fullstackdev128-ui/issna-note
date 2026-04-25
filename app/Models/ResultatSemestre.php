@@ -24,7 +24,7 @@ class ResultatSemestre extends Model {
         if (!$this->decision_jury) return '---';
         if ($this->decision_jury === 'À valider') return $this->decision_jury;
         
-        $suffix = (isset($this->etudiant) && strtoupper($this->etudiant->genre) === 'F') ? 'e' : '';
-        return str_replace('(e)', $suffix, $this->decision_jury);
+        $suffix = (isset($this->etudiant) && strtoupper(trim($this->etudiant->genre)) === 'F') ? 'e' : '';
+        return preg_replace('/\s*\(e\)/iu', $suffix, $this->decision_jury);
     }
 }
