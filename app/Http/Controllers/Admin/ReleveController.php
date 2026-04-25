@@ -28,90 +28,100 @@ class ReleveController extends Controller
 
     public function generer(Request $request)
     {
-        $request->validate([
-            'etudiant_id' => 'required|exists:etudiants,id',
-            'annee_acad_id' => 'required|exists:annee_academiques,id',
-            'semestres' => 'required|array',
-        ]);
+        try {
+            $request->validate([
+                'etudiant_id' => 'required|exists:etudiants,id',
+                'annee_acad_id' => 'required|exists:annee_academiques,id',
+                'semestres' => 'required|array',
+            ]);
 
-        $etudiant = Etudiant::with(['specialite.filiere', 'campus'])->findOrFail($request->etudiant_id);
-        $annee = AnneeAcademique::findOrFail($request->annee_acad_id);
-        
-        $data_semestres = [];
-        foreach ($request->semestres as $semestre) {
-            $resultat = $this->calculator->calculerResultatSemestre($etudiant->id, $annee->id, $semestre);
-            $resEnBase = ResultatSemestre::where([
-                'etudiant_id' => $etudiant->id,
-                'annee_acad_id' => $annee->id,
-                'semestre' => $semestre
-            ])->first();
-
-            $data_semestres[] = [
-                'numero' => $semestre,
-                'resultat' => $resultat,
-                'en_base' => $resEnBase
-            ];
-        }
-
-        // Détection Relevé Annuel
-        $semestresSelectionnes = array_map('intval', $request->semestres);
-        sort($semestresSelectionnes);
-        
-        $estAnnuel = count($semestresSelectionnes) === 2 
-            && ($semestresSelectionnes[1] - $semestresSelectionnes[0]) === 1 
-            && $semestresSelectionnes[0] % 2 === 1;
-
-        $resultatAnnuel = null;
-        if ($estAnnuel) {
-            $niveau = (int) ceil($semestresSelectionnes[0] / 2);
+            $etudiant = Etudiant::with(['specialite.filiere', 'campus'])->findOrFail($request->etudiant_id);
+            $annee = AnneeAcademique::findOrFail($request->annee_acad_id);
             
-            $resultatAnnuel = \App\Models\ResultatAnnuel::where([
-                'etudiant_id'   => $etudiant->id,
-                'annee_acad_id' => $annee->id,
-                'niveau'        => $niveau,
-            ])->first();
-
-            if (!$resultatAnnuel) {
-                $resS1 = \App\Models\ResultatSemestre::where([
-                    'etudiant_id'   => $etudiant->id,
+            $data_semestres = [];
+            foreach ($request->semestres as $semestre) {
+                $resultat = $this->calculator->calculerResultatSemestre($etudiant->id, $annee->id, $semestre);
+                $resEnBase = ResultatSemestre::where([
+                    'etudiant_id' => $etudiant->id,
                     'annee_acad_id' => $annee->id,
-                    'semestre'      => $semestresSelectionnes[0],
+                    'semestre' => $semestre
                 ])->first();
 
-                $resS2 = \App\Models\ResultatSemestre::where([
+                $data_semestres[] = [
+                    'numero' => $semestre,
+                    'resultat' => $resultat,
+                    'en_base' => $resEnBase
+                ];
+            }
+
+            // Détection Relevé Annuel
+            $semestresSelectionnes = array_map('intval', $request->semestres);
+            sort($semestresSelectionnes);
+            
+            $estAnnuel = count($semestresSelectionnes) === 2 
+                && ($semestresSelectionnes[1] - $semestresSelectionnes[0]) === 1 
+                && $semestresSelectionnes[0] % 2 === 1;
+
+            $resultatAnnuel = null;
+            if ($estAnnuel) {
+                $niveau = (int) ceil($semestresSelectionnes[0] / 2);
+                
+                $resultatAnnuel = \App\Models\ResultatAnnuel::where([
                     'etudiant_id'   => $etudiant->id,
                     'annee_acad_id' => $annee->id,
-                    'semestre'      => $semestresSelectionnes[1],
+                    'niveau'        => $niveau,
                 ])->first();
 
-                if ($resS1 && $resS2) {
-                    $moyAnnuelle = round(($resS1->moyenne_sem + $resS2->moyenne_sem) / 2, 2);
-                    $mgpAnnuel = round(($resS1->mgp + $resS2->mgp) / 2, 2);
-                    $creditsTotal = $resS1->credits_valides + $resS2->credits_valides;
-                    $gradeInfo = $this->calculator->getMGPetGrade($moyAnnuelle);
+                if (!$resultatAnnuel) {
+                    $resS1 = \App\Models\ResultatSemestre::where([
+                        'etudiant_id'   => $etudiant->id,
+                        'annee_acad_id' => $annee->id,
+                        'semestre'      => $semestresSelectionnes[0],
+                    ])->first();
 
-                    $resultatAnnuel = (object) [
-                        'moyenne_annuelle'      => $moyAnnuelle,
-                        'mgp_annuel'            => $mgpAnnuel,
-                        'grade_annuel'          => $gradeInfo['grade'],
-                        'mention_annuelle'       => $gradeInfo['mention'],
-                        'credits_valides_total'  => $creditsTotal,
-                        'decision_jury'          => null,
-                    ];
+                    $resS2 = \App\Models\ResultatSemestre::where([
+                        'etudiant_id'   => $etudiant->id,
+                        'annee_acad_id' => $annee->id,
+                        'semestre'      => $semestresSelectionnes[1],
+                    ])->first();
+
+                    if ($resS1 && $resS2) {
+                        $moyAnnuelle = round(($resS1->moyenne_sem + $resS2->moyenne_sem) / 2, 2);
+                        $mgpAnnuel = round(($resS1->mgp + $resS2->mgp) / 2, 2);
+                        $creditsTotal = $resS1->credits_valides + $resS2->credits_valides;
+                        $gradeInfo = $this->calculator->getMGPetGrade($moyAnnuelle);
+
+                        $resultatAnnuel = (object) [
+                            'moyenne_annuelle'      => $moyAnnuelle,
+                            'mgp_annuel'            => $mgpAnnuel,
+                            'grade_annuel'          => $gradeInfo['grade'],
+                            'mention_annuelle'       => $gradeInfo['mention'],
+                            'credits_valides_total'  => $creditsTotal,
+                            'decision_jury'          => null,
+                        ];
+                    }
                 }
             }
+
+            $data = [
+                'etudiant' => $etudiant,
+                'annee' => $annee->libelle,
+                'semestres' => $data_semestres,
+                'date' => now()->format('d/m/Y'),
+                'resultat_annuel' => $resultatAnnuel,
+                'est_annuel' => $estAnnuel,
+            ];
+
+            $pdf = Pdf::loadView('releves.pdf', $data);
+            return $pdf->stream('releve_'.$etudiant->matricule.'.pdf');
+        } catch (\Throwable $e) {
+            return response(
+                "<h1>ERREUR CRITIQUE LORS DE LA GÉNÉRATION PDF</h1>" .
+                "<p><strong>Message :</strong> " . $e->getMessage() . "</p>" .
+                "<p><strong>Fichier :</strong> " . $e->getFile() . " à la ligne " . $e->getLine() . "</p>" .
+                "<pre style='background:#f4f4f4; padding:15px; overflow-x:auto;'>" . $e->getTraceAsString() . "</pre>",
+                500
+            );
         }
-
-        $data = [
-            'etudiant' => $etudiant,
-            'annee' => $annee->libelle,
-            'semestres' => $data_semestres,
-            'date' => now()->format('d/m/Y'),
-            'resultat_annuel' => $resultatAnnuel,
-            'est_annuel' => $estAnnuel,
-        ];
-
-        $pdf = Pdf::loadView('releves.pdf', $data);
-        return $pdf->stream('releve_'.$etudiant->matricule.'.pdf');
     }
 }
