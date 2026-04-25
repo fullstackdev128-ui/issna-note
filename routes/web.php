@@ -266,8 +266,8 @@ Route::get('/seed-all-data', function () {
     \App\Models\ElementConstitutif::firstOrCreate(['code_ec' => 'SIN131-3'], ['ue_id' => $sin131->id, 'nom' => 'TIC', 'credit' => 1, 'note_eliminatoire' => 8]);
 
     // 6. etudiants
-    $campusA = \App\Models\Campus::where('nom', 'Campus A')->first() ?? \App\Models\Campus::first();
-    $campusB = \App\Models\Campus::where('nom', 'Campus B')->first() ?? \App\Models\Campus::first();
+    $campusA = \App\Models\Campus::firstOrCreate(['nom' => 'Campus A'], ['ville' => 'Yaoundé']);
+    $campusB = \App\Models\Campus::firstOrCreate(['nom' => 'Campus B'], ['ville' => 'Yaoundé']);
     
     // Etudiant 1 (Martin NOAH)
     \App\Models\Etudiant::firstOrCreate(
@@ -284,10 +284,11 @@ Route::get('/seed-all-data', function () {
             'etablissement_provenance' => 'IUGET',
             'nom_parent' => 'Bilo\'o Christian',
             'tel_parent' => '677852145',
-            'campus_id' => $campusA->id ?? null,
+            'campus_id' => $campusA->id,
             'specialite_id' => $kine->id,
             'niveau_actuel' => 3,
             'annee_acad_id' => $annee->id,
+            'date_inscription' => now(),
             'statut' => 'actif'
         ]
     );
@@ -307,10 +308,11 @@ Route::get('/seed-all-data', function () {
             'etablissement_provenance' => 'Lycée Leclerc',
             'nom_parent' => 'Ekani Pierre',
             'tel_parent' => '699223344',
-            'campus_id' => $campusB->id ?? null,
+            'campus_id' => $campusB->id,
             'specialite_id' => $si->id,
             'niveau_actuel' => 1,
             'annee_acad_id' => $annee->id,
+            'date_inscription' => now(),
             'statut' => 'actif'
         ]
     );
@@ -330,10 +332,11 @@ Route::get('/seed-all-data', function () {
             'etablissement_provenance' => 'Collège De La Salle',
             'nom_parent' => 'Fotso Jean',
             'tel_parent' => '677889900',
-            'campus_id' => $campusA->id ?? null,
+            'campus_id' => $campusA->id,
             'specialite_id' => $sf->id,
             'niveau_actuel' => 2,
             'annee_acad_id' => $annee->id,
+            'date_inscription' => now(),
             'statut' => 'actif'
         ]
     );

@@ -27,4 +27,12 @@ class ResultatAnnuel extends Model
     public function etudiant() { return $this->belongsTo(Etudiant::class); } 
     public function anneeAcademique() { return $this->belongsTo(AnneeAcademique::class, 'annee_acad_id'); } 
     public function validateurUser() { return $this->belongsTo(User::class, 'valide_par'); } 
+
+    public function getDecisionJuryFormateeAttribute(): string {
+        if (!$this->decision_jury) return '---';
+        if ($this->decision_jury === 'À valider') return $this->decision_jury;
+        
+        $suffix = (isset($this->etudiant) && strtoupper($this->etudiant->genre) === 'F') ? 'e' : '';
+        return str_replace('(e)', $suffix, $this->decision_jury);
+    }
 }

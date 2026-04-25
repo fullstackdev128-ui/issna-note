@@ -21,7 +21,7 @@
         </div>
         <div class="relative z-10 text-right">
             <p class="text-[10px] font-black text-green-200 uppercase tracking-widest">Statut Final</p>
-            <p class="text-3xl font-black uppercase tracking-tighter">{{ $resultatAnnuel->decision_jury }}</p>
+            <p class="text-3xl font-black uppercase tracking-tighter">{{ $resultatAnnuel->decision_jury_formatee }}</p>
         </div>
         <div class="absolute -right-10 -top-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
     </div>

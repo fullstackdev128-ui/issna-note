@@ -47,7 +47,7 @@
             <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('images/IFPSCID.png'))) }}" class="logo-img">
         </div>
         <div class="header-cell header-center">
-            <div class="inst-name">INSTITUT SUPERIEUR DE SANTE ET DE NUTRITION</div>
+            <div class="inst-name">INSTITUT SUPERIEUR DE SANTE ET DE NUTRITION APPLIQUÉE (ISSNA)</div>
             <div class="inst-sub">INSTITUT DE FORMATIONS PROFESSIONNELLES EN SCIENCES DU DÉVELOPPEMENT</div>
             <div class="inst-details">ARRÊTÉ N°002/MINEFOP/SG/DFOP/SDGSF/SACD DU 10 Juin 2020</div>
             <div class="inst-details">AUTORISATION N° 26-02379/NHA/MINESUP/DDES/ESUP/SDA/NS</div>
@@ -137,7 +137,7 @@
                     <td>{{ number_format($s['resultat']['moyenne_sem'], 2) }}</td>
                     <td>{{ number_format($s['resultat']['mgp'], 1) }}</td>
                     <td>{{ $s['resultat']['grade'] }}</td>
-                    <td>{{ $s['en_base'] ? $s['en_base']->decision_jury : '---' }}</td>
+                    <td>{{ $s['en_base'] ? $s['en_base']->decision_jury_formatee : '---' }}</td>
                 </tr>
             </table>
         </div>
@@ -159,7 +159,7 @@
                 <td style="padding:8px; text-align:center; border:1px solid #1e3a8a; font-weight:bold; font-size:16px; color:#1e3a8a;">{{ number_format($resultat_annuel->moyenne_annuelle, 2) }}</td> 
                 <td style="padding:8px; text-align:center; border:1px solid #1e3a8a; font-weight:bold; font-size:11px;">{{ number_format($resultat_annuel->mgp_annuel, 2) }}</td> 
                 <td style="padding:8px; text-align:center; border:1px solid #1e3a8a; font-weight:bold; font-size:11px;">{{ $resultat_annuel->grade_annuel }}</td> 
-                <td style="padding:8px; text-align:center; border:1px solid #1e3a8a; font-weight:bold; font-size:11px; text-transform:uppercase;">{{ $resultat_annuel->decision_jury ?? 'À valider' }}</td> 
+                <td style="padding:8px; text-align:center; border:1px solid #1e3a8a; font-weight:bold; font-size:11px; text-transform:uppercase;">{{ $resultat_annuel->decision_jury_formatee ?? 'À valider' }}</td> 
             </tr> 
         </table>
     </div>

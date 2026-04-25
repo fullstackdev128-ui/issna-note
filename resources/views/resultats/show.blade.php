@@ -87,7 +87,7 @@
         </div>
         <div class="bg-gray-900 p-8 rounded-3xl border border-gray-800 shadow-xl text-center flex flex-col justify-center">
             <p class="text-xs font-black text-blue-400 uppercase tracking-widest mb-2">Décision</p>
-            <p class="text-xl font-black text-white uppercase tracking-tighter">{{ $resultatEnBase->decision_jury }}</p>
+            <p class="text-xl font-black text-white uppercase tracking-tighter">{{ $resultatEnBase->decision_jury_formatee }}</p>
         </div>
     </div>
 </div>
