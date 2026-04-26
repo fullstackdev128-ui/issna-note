@@ -86,14 +86,6 @@
         </tr>
     </table>
 
-    @php
-        function formatDecisionGenre($decision, $genre) {
-            if (!$decision || $decision === '---' || $decision === 'À valider') return $decision;
-            $suffix = (strtoupper(trim($genre)) === 'F') ? 'e' : '';
-            return preg_replace('/\s*\(e\)/iu', $suffix, $decision);
-        }
-    @endphp
-
     @foreach($semestres as $s)
         <div style="margin-top: 10px;">
             <div style="font-weight: bold; text-decoration: underline; margin-bottom: 5px;">SEMESTRE {{ $s['numero'] }}</div>
@@ -145,7 +137,7 @@
                     <td>{{ number_format($s['resultat']['moyenne_sem'], 2) }}</td>
                     <td>{{ number_format($s['resultat']['mgp'], 1) }}</td>
                     <td>{{ $s['resultat']['grade'] }}</td>
-                    <td>{{ formatDecisionGenre($s['en_base'] ? $s['en_base']->decision_jury : '---', $etudiant->genre) }}</td>
+                    <td>{{ strtoupper($s['en_base'] ? $s['en_base']->decision_jury : '---') }}</td>
                 </tr>
             </table>
         </div>
@@ -167,7 +159,7 @@
                 <td style="padding:8px; text-align:center; border:1px solid #1e3a8a; font-weight:bold; font-size:16px; color:#1e3a8a;">{{ number_format($resultat_annuel->moyenne_annuelle, 2) }}</td> 
                 <td style="padding:8px; text-align:center; border:1px solid #1e3a8a; font-weight:bold; font-size:11px;">{{ number_format($resultat_annuel->mgp_annuel, 2) }}</td> 
                 <td style="padding:8px; text-align:center; border:1px solid #1e3a8a; font-weight:bold; font-size:11px;">{{ $resultat_annuel->grade_annuel }}</td> 
-                <td style="padding:8px; text-align:center; border:1px solid #1e3a8a; font-weight:bold; font-size:11px; text-transform:uppercase;">{{ formatDecisionGenre($resultat_annuel->decision_jury ?? 'À valider', $etudiant->genre) }}</td> 
+                <td style="padding:8px; text-align:center; border:1px solid #1e3a8a; font-weight:bold; font-size:11px; text-transform:uppercase;">{{ strtoupper($resultat_annuel->decision_jury ?? 'À valider') }}</td> 
             </tr> 
         </table>
     </div>
@@ -205,8 +197,8 @@
                             <span style="font-size: 8px;">The Manager</span>
                         </td>
                         <td style="text-align: right; width: 50%;">
-                            <strong>La Direction IFPSCID</strong><br>
-                            <span style="font-size: 8px;">The IFPSCID Management</span>
+                            <strong>Le Chef du Département IFPSCID</strong><br>
+                            <span style="font-size: 8px;">The Head of the IFPSCID Department</span>
                         </td>
                     </tr>
                 </table>
