@@ -15,7 +15,12 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->midd
 
 // Protected Routes
 Route::middleware(['auth'])->group(function () {
-    Route::get('/', function () {
+    Route::get('/debug-schema', function () {
+    $cols = DB::select("SHOW COLUMNS FROM resultat_semestres LIKE 'decision_jury'");
+    return response()->json($cols);
+});
+
+Route::get('/', function () {
         return redirect()->route('dashboard');
     });
 
