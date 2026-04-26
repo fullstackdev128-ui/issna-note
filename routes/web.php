@@ -18,6 +18,21 @@ Route::get('/debug-schema', function () {
     return response()->json($cols);
 });
 
+Route::get('/migrate-db', function () {
+    try {
+        Artisan::call('migrate', ['--force' => true]);
+        return response()->json([
+            'status' => 'success',
+            'output' => Artisan::output()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage()
+        ], 500);
+    }
+});
+
 // Protected Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/', function () {
