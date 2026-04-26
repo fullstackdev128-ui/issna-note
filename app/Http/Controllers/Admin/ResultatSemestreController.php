@@ -46,43 +46,47 @@ class ResultatSemestreController extends Controller
 
     public function valider(Request $request)
     {
-        $request->validate([
-            'etudiant_id' => 'required|exists:etudiants,id',
-            'annee_acad_id' => 'required|exists:annee_academiques,id',
-            'semestre' => 'required|integer',
-            'decision_jury' => 'required|in:Admis(e),Ajourné(e),Autorisé(e) à continuer,Exclu(e)',
-        ]);
+        try {
+            $request->validate([
+                'etudiant_id' => 'required|exists:etudiants,id',
+                'annee_acad_id' => 'required|exists:annee_academiques,id',
+                'semestre' => 'required|integer',
+                'decision_jury' => 'required|in:Admis(e),Ajourné(e),Autorisé(e) à continuer,Exclu(e)',
+            ]);
 
-        $resultatData = $this->calculator->calculerResultatSemestre($request->etudiant_id, $request->annee_acad_id, $request->semestre);
+            $resultatData = $this->calculator->calculerResultatSemestre($request->etudiant_id, $request->annee_acad_id, $request->semestre);
 
-        if ($resultatData['est_partiel']) {
-            return back()->with('error', 'Impossible de valider un résultat partiel. Toutes les notes doivent être saisies.');
+            if ($resultatData['est_partiel']) {
+                return back()->with('error', 'Impossible de valider un résultat partiel. Toutes les notes doivent être saisies.');
+            }
+
+            ResultatSemestre::updateOrCreate(
+                [
+                    'etudiant_id' => $request->etudiant_id,
+                    'annee_acad_id' => $request->annee_acad_id,
+                    'semestre' => $request->semestre,
+                ],
+                [
+                    'total_credits' => $resultatData['total_credits'],
+                    'credits_valides' => $resultatData['credits_valides'],
+                    'moyenne_sem' => $resultatData['moyenne_sem'],
+                    'mgp' => $resultatData['mgp'],
+                    'grade' => $resultatData['grade'],
+                    'mention' => $resultatData['mention'],
+                    'decision_jury' => $request->decision_jury,
+                    'date_calcul' => now(),
+                    'valide' => true,
+                ]
+            );
+
+            return redirect()->route('resultats.show', [
+                'etudiantId' => $request->etudiant_id,
+                'anneeId' => $request->annee_acad_id,
+                'semestre' => $request->semestre
+            ])->with('success', 'Résultat semestriel validé et enregistré.');
+        } catch (\Exception $e) {
+            dd($e->getMessage(), $e->getTraceAsString());
         }
-
-        ResultatSemestre::updateOrCreate(
-            [
-                'etudiant_id' => $request->etudiant_id,
-                'annee_acad_id' => $request->annee_acad_id,
-                'semestre' => $request->semestre,
-            ],
-            [
-                'total_credits' => $resultatData['total_credits'],
-                'credits_valides' => $resultatData['credits_valides'],
-                'moyenne_sem' => $resultatData['moyenne_sem'],
-                'mgp' => $resultatData['mgp'],
-                'grade' => $resultatData['grade'],
-                'mention' => $resultatData['mention'],
-                'decision_jury' => $request->decision_jury,
-                'date_calcul' => now(),
-                'valide' => true,
-            ]
-        );
-
-        return redirect()->route('resultats.show', [
-            'etudiantId' => $request->etudiant_id,
-            'anneeId' => $request->annee_acad_id,
-            'semestre' => $request->semestre
-        ])->with('success', 'Résultat semestriel validé et enregistré.');
     }
 
     public function show(int $etudiantId, int $anneeId, int $semestre)
