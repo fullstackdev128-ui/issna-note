@@ -35,10 +35,10 @@
                         <p class="font-black text-gray-800 uppercase tracking-tight">{{ $a->libelle }}</p>
                     </td>
                     <td class="px-6 py-4 text-gray-500 font-bold">
-                        {{ $a->date_debut->format('d/m/Y') }}
+                        {{ $a->date_debut ? $a->date_debut->format('d/m/Y') : 'N/A' }}
                     </td>
                     <td class="px-6 py-4 text-gray-500 font-bold">
-                        {{ $a->date_fin->format('d/m/Y') }}
+                        {{ $a->date_fin ? $a->date_fin->format('d/m/Y') : 'N/A' }}
                     </td>
                     <td class="px-6 py-4 text-center">
                         @if($a->active)

@@ -10,12 +10,8 @@ class AnneeAcademiqueController extends Controller
 {
     public function index()
     {
-        try {
-            $annees = AnneeAcademique::orderBy('date_debut', 'desc')->get();
-            return view('referentiel.annees.index', compact('annees'));
-        } catch (\Exception $e) {
-            dd($e->getMessage(), $e->getTraceAsString());
-        }
+        $annees = AnneeAcademique::orderBy('date_debut', 'desc')->get();
+        return view('referentiel.annees.index', compact('annees'));
     }
 
     public function create()
