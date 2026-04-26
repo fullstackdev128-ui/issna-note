@@ -32,6 +32,6 @@ class ResultatAnnuel extends Model
         if (!$this->decision_jury) return '---';
         if ($this->decision_jury === 'À valider') return $this->decision_jury;
         
-        return strtoupper($this->decision_jury);
+        return $this->decision_jury;
     }
 }

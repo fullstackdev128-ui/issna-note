@@ -50,7 +50,7 @@ class ResultatSemestreController extends Controller
             'etudiant_id' => 'required|exists:etudiants,id',
             'annee_acad_id' => 'required|exists:annee_academiques,id',
             'semestre' => 'required|integer',
-            'decision_jury' => 'required|in:Admis,Ajourne,Autorise a continuer,Exclu',
+            'decision_jury' => 'required|in:Admis(e),Ajourné(e),Autorisé(e) à continuer,Exclu(e)',
         ]);
 
         $resultatData = $this->calculator->calculerResultatSemestre($request->etudiant_id, $request->annee_acad_id, $request->semestre);

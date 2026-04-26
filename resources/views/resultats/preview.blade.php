@@ -104,10 +104,10 @@
                     <div>
                         <label class="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">Décision du Jury</label>
                         <select name="decision_jury" required class="w-full bg-white/5 border-2 border-white/10 rounded-2xl px-4 py-3 outline-none focus:border-blue-500 font-bold transition-all">
-                            <option value="Admis" class="text-gray-800">Admis(e)</option>
-                            <option value="Ajourne" class="text-gray-800">Ajourné(e)</option>
-                            <option value="Autorise a continuer" class="text-gray-800">Autorisé à continuer</option>
-                            <option value="Exclu" class="text-gray-800">Exclu(e)</option>
+                            <option value="Admis(e)" class="text-gray-800">Admis(e)</option>
+                            <option value="Ajourné(e)" class="text-gray-800">Ajourné(e)</option>
+                            <option value="Autorisé(e) à continuer" class="text-gray-800">Autorisé à continuer</option>
+                            <option value="Exclu(e)" class="text-gray-800">Exclu(e)</option>
                         </select>
                     </div>
 
