@@ -13,14 +13,14 @@ Route::get('/login', [LoginController::class, 'showForm'])->name('login')->middl
 Route::post('/login', [LoginController::class, 'login'])->middleware('guest');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout')->middleware('auth');
 
-// Protected Routes
-Route::middleware(['auth'])->group(function () {
-    Route::get('/debug-schema', function () {
+Route::get('/debug-schema', function () {
     $cols = DB::select("SHOW COLUMNS FROM resultat_semestres LIKE 'decision_jury'");
     return response()->json($cols);
 });
 
-Route::get('/', function () {
+// Protected Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/', function () {
         return redirect()->route('dashboard');
     });
 
